@@ -21,7 +21,7 @@ function TimbermouseGame:new(playerName)
         o.treeBlocks[i] = math.random(1, 3)
     end
 
-    self:updateTimeBar()
+    o:updateTimeBar()
     return o
 end
 
@@ -62,7 +62,7 @@ function TimbermouseGame:renderTree()
             self.treeImages[#self.treeImages + 1] = tfm.exec.addImage(IMAGE_LEFT_BRANCH, '?69', 350, 400 - (i * 50) - GROUND_OFFSET, self.playerName, 0.5, 0.5, 0, 1.0, 0.5, 0)
         elseif treeBlock == enum.treeBlocks.TREE_RIGHT then
             self.treeImages[#self.treeImages + 1] = tfm.exec.addImage(IMAGE_RIGHT_BRANCH, '?69', 450, 400 - (i * 50) - GROUND_OFFSET, self.playerName, 0.5, 0.5, 0, 1.0, 0.5, 0)
-        end 
+        end
     end
 end
 
@@ -87,7 +87,7 @@ function TimbermouseGame:cutTreeBlock(left)
     self.score = self.score + 1
     self:updateScoreCounter()
     tfm.exec.displayParticle(tfm.enum.particle.projection, 400, 400 - GROUND_OFFSET - 5, 0, 0, 0, 0, self.playerName)
-    
+
     tfm.exec.playSound(string.format('tfmadv/tranchant%d.mp3', math.random(1, 4)), nil, nil, nil, self.playerName)
 
     self.timeLeft = math.min(self.timeLeft + 0.15, self.timeTotal)
