@@ -40,5 +40,8 @@ The goal is to earn the highest score you can before the time runs out or you cu
 end
 
 function game(playerName)
-    return playerData[playerName].game
+    if playerData[playerName] then
+        return playerData[playerName].game
+    end
+    return nil
 end
