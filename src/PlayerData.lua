@@ -1,7 +1,9 @@
 PlayerData = {
     playerName = nil,
     game = nil,
-    bestScore = 0
+    bestScore = 0,
+    hidden = true,
+    imagesFromHide = {}
 }
 
 function PlayerData:new(playerName)
@@ -9,6 +11,7 @@ function PlayerData:new(playerName)
     setmetatable(o, self)
     self.__index = self
     o.playerName = playerName
+    o.imagesFromHide = {}
     return o
 end
 

@@ -26,7 +26,7 @@ function TimbermouseGame:new(playerName)
 end
 
 function TimbermouseGame:updateScoreCounter()
-    ui.updateTextArea(enum.textArea.SCORE, string.format('<p align="center"><font size="30" color="#FFFFFF"><b>%d</b></font></p>', self.score), self.playerName)
+    ui.updateTextArea(enum.textArea.SCORE, string.format('<p align="center"><font size="32" color="#FFFFFF" face="serif"><b>%d</b></font></p>', self.score), self.playerName)
 end
 
 function TimbermouseGame:endGame()
@@ -40,15 +40,23 @@ function TimbermouseGame:endGame()
     for i, imageID in ipairs(self.treeImages) do
         tfm.exec.removeImage(imageID)
     end
+
     tfm.exec.freezePlayer(self.playerName, false)
-    playerData[self.playerName].game = nil
-    addStartGameButton(self.playerName)
+    tfm.exec.stopMusic('musique', self.playerName)
     ui.removeTextArea(enum.textArea.SCORE, self.playerName)
     self:removeTimeBar()
+    self:showGameover()
+    unhidePlayer(self.playerName)
+    addStartGameButton(self.playerName)
 
-    tfm.exec.stopMusic('musique', self.playerName)
+    playerData[self.playerName].game = nil
+end
 
-    ui.addPopup(1, 0, string.format('<p align="center"><font color="#00FF00" size="26"><b>GG!</b></font></p><p align="center"><b>You scored:</b> %d</p>', self.score), self.playerName, 300, 175, 200, true)
+function TimbermouseGame:showGameover()
+    local text = '<p align="center"><font color="#fcf1d2" size="24" face="serif"><b>GAME OVER</b></font></p>'
+    text = text .. string.format('<p align="center"><font size="20" color="#825727">SCORE</font><br><font size="24" color="#FFFFFF"><b>%d</b></font></p>', self.score)
+    text = text .. string.format('<p align="center"><font size="18" color="#825727">BEST</font><br><font size="22" color="#FFFFFF"><b>%d</b></font></p>', playerData[self.playerName].bestScore)
+    ui.addTextArea(enum.textArea.GAME_OVER, text, self.playerName, 275, 150, 250, 150, 0xf0bb69, 0x825727, 1.0, true)
 end
 
 function TimbermouseGame:renderTree()
@@ -116,6 +124,22 @@ function TimbermouseGame:updateTimeBar()
     ui.addTextArea(enum.textArea.TIME_LEFT, '', self.playerName, 300, 25, timeLeftWidth, 25, color, color, 1.0, true)
 end
 
+function TimbermouseGame:onMouseClick(x, y)
+    if x > 400 then
+        if self.treeBlocks[1] ~= enum.treeBlocks.TREE_RIGHT then
+            self:cutTreeBlock(false)
+        else
+            self:endGame()
+        end
+    else
+        if self.treeBlocks[1] ~= enum.treeBlocks.TREE_LEFT then
+            self:cutTreeBlock(true)
+        else
+            self:endGame()
+        end
+    end
+end
+
 function startTimbermouseGame(playerName)
     local game = TimbermouseGame:new(playerName)
     playerData[playerName].game = game
@@ -125,4 +149,6 @@ function startTimbermouseGame(playerName)
     ui.addTextArea(enum.textArea.SCORE, '', playerName, 300, 70, 200, 50, nil, nil, 0, true)
     game:updateScoreCounter()
     tfm.exec.stopMusic('musique', playerName)
+    hideMouseForOthers(playerName)
+    ui.removeTextArea(enum.textArea.GAME_OVER, playerName)
 end

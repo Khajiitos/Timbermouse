@@ -15,6 +15,7 @@ enum = {
         START_GAME = 2,
         SCORE = 3,
         TIME_LEFT = 4,
-        TIME_TOTAL = 5
+        TIME_TOTAL = 5,
+        GAME_OVER = 6
     }
 }
