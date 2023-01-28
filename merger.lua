@@ -15,6 +15,7 @@ files = {
     'events/eventNewPlayer.lua',
     'events/eventPlayerLeft.lua',
     'events/eventPlayerDied.lua',
+    'events/eventPlayerRespawn.lua',
     'events/eventTextAreaCallback.lua',
     'events/eventLoop.lua',
 

@@ -18,11 +18,28 @@ function TimbermouseGame:new(playerName)
 
     o.treeBlocks[1] = enum.treeBlocks.TREE
     for i = 2, 8 do
-        o.treeBlocks[i] = math.random(1, 3)
+        o.treeBlocks[i] = o:generateTreeBlock()
     end
 
     o:updateTimeBar()
     return o
+end
+
+function TimbermouseGame:generateTreeBlock()
+    local rand = math.random(3)
+
+    if rand == 1 then
+        return enum.treeBlocks.TREE
+    else
+        if self.treeBlocks[#self.treeBlocks] ~= enum.treeBlocks.TREE then
+            return enum.treeBlocks.TREE
+        end
+        if rand == 2 then
+            return enum.treeBlocks.TREE_LEFT
+        else
+            return enum.treeBlocks.TREE_RIGHT
+        end
+    end
 end
 
 function TimbermouseGame:updateScoreCounter()
@@ -80,8 +97,15 @@ function TimbermouseGame:cutTreeBlock(left)
         self.started = true
     end
 
+    if  left and self.treeBlocks[2] == enum.treeBlocks.TREE_LEFT or
+        not left and self.treeBlocks[2] == enum.treeBlocks.TREE_RIGHT then
+        
+        self:endGame()
+        return
+    end
+
     table.remove(self.treeBlocks, 1)
-    self.treeBlocks[#self.treeBlocks + 1] = math.random(1, 3)
+    self.treeBlocks[#self.treeBlocks + 1] = self:generateTreeBlock()
     self:renderTree()
 
     if left then
@@ -126,17 +150,17 @@ end
 
 function TimbermouseGame:onMouseClick(x, y)
     if x > 400 then
-        if self.treeBlocks[2] ~= enum.treeBlocks.TREE_RIGHT then
-            self:cutTreeBlock(false)
-        else
-            self:endGame()
-        end
+        self:cutTreeBlock(false)
     else
-        if self.treeBlocks[2] ~= enum.treeBlocks.TREE_LEFT then
-            self:cutTreeBlock(true)
-        else
-            self:endGame()
-        end
+        self:cutTreeBlock(true)
+    end
+end
+
+function TimbermouseGame:onKeyboard(keyCode)
+    if keyCode == 0 then
+        self:cutTreeBlock(true)
+    elseif keyCode == 2 then
+        self:cutTreeBlock(false)
     end
 end
 
