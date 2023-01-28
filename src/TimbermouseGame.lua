@@ -98,7 +98,7 @@ function TimbermouseGame:cutTreeBlock(left)
 
     tfm.exec.playSound(string.format('tfmadv/tranchant%d.mp3', math.random(1, 4)), nil, nil, nil, self.playerName)
 
-    self.timeLeft = math.min(self.timeLeft + 0.15, self.timeTotal)
+    self.timeLeft = math.min(self.timeLeft + 0.20, self.timeTotal)
     self:updateTimeBar()
 end
 
@@ -126,13 +126,13 @@ end
 
 function TimbermouseGame:onMouseClick(x, y)
     if x > 400 then
-        if self.treeBlocks[1] ~= enum.treeBlocks.TREE_RIGHT then
+        if self.treeBlocks[2] ~= enum.treeBlocks.TREE_RIGHT then
             self:cutTreeBlock(false)
         else
             self:endGame()
         end
     else
-        if self.treeBlocks[1] ~= enum.treeBlocks.TREE_LEFT then
+        if self.treeBlocks[2] ~= enum.treeBlocks.TREE_LEFT then
             self:cutTreeBlock(true)
         else
             self:endGame()
