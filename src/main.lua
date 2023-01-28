@@ -1,5 +1,6 @@
 function initPlayer(playerName)
     playerData[playerName] = PlayerData:new(playerName)
+    tfm.exec.changePlayerSize(playerName, MOUSE_SIZE)
 
     addStartGameButton(playerName)
     

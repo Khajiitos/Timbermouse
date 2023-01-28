@@ -74,7 +74,9 @@ function TimbermouseGame:showGameover()
     local text = '<p align="center"><font color="#fcf1d2" size="24" face="serif"><b>GAME OVER</b></font></p>'
     text = text .. string.format('<p align="center"><font size="20" color="#825727">SCORE</font><br><font size="24" color="#FFFFFF"><b>%d</b></font></p>', self.score)
     text = text .. string.format('<p align="center"><font size="18" color="#825727">BEST</font><br><font size="22" color="#FFFFFF"><b>%d</b></font></p>', playerData[self.playerName].bestScore)
+
     ui.addTextArea(enum.textArea.GAME_OVER, text, self.playerName, 275, 150, 250, 150, 0xf0bb69, 0x825727, 1.0, true)
+    ui.addTextArea(enum.textArea.GAME_OVER_CLOSE, '<a href="event:gameOverClose"><font size="11" color="#FCF1D2"><p align="center"><b>X</b></p></font></a>', self.playerName, 500, 160, 15, 15, 0x825727, 0x724717, 1.0, true)
 end
 
 function TimbermouseGame:renderTree()
@@ -176,5 +178,6 @@ function startTimbermouseGame(playerName)
     tfm.exec.stopMusic('musique', playerName)
     hideMouseForOthers(playerName)
     ui.removeTextArea(enum.textArea.GAME_OVER, playerName)
+    ui.removeTextArea(enum.textArea.GAME_OVER_CLOSE, playerName)
     tfm.exec.movePlayer(playerName, 350, 400 - GROUND_OFFSET - 2, false, 0, 0, false)
 end
