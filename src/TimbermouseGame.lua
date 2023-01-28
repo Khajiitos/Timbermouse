@@ -17,7 +17,8 @@ function TimbermouseGame:new(playerName)
     o.treeImages = {}
 
     o.treeBlocks[1] = enum.treeBlocks.TREE
-    for i = 2, 8 do
+    o.treeBlocks[2] = enum.treeBlocks.TREE
+    for i = 3, 8 do
         o.treeBlocks[i] = o:generateTreeBlock()
     end
 
@@ -175,4 +176,5 @@ function startTimbermouseGame(playerName)
     tfm.exec.stopMusic('musique', playerName)
     hideMouseForOthers(playerName)
     ui.removeTextArea(enum.textArea.GAME_OVER, playerName)
+    tfm.exec.movePlayer(playerName, 350, 400 - GROUND_OFFSET - 2, false, 0, 0, false)
 end

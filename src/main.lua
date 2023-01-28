@@ -17,6 +17,8 @@ tfm.exec.disableAutoScore(true)
 tfm.exec.disableAutoShaman(true)
 tfm.exec.disableAutoTimeLeft(true)
 tfm.exec.disablePhysicalConsumables(true)
+tfm.exec.disableMortCommand(true)
+tfm.exec.disableWatchCommand(true)
 
 tfm.exec.newGame(7925577)
 tfm.exec.setGameTime(0, true)
