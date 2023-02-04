@@ -2,7 +2,7 @@ PlayerData = {
     playerName = nil,
     game = nil,
     bestScore = 0,
-    hidden = true,
+    hidden = false,
     imagesFromHide = {}
 }
 

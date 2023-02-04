@@ -2,10 +2,12 @@ TimbermouseGame = {
     playerName = nil,
     treeBlocks = {},
     treeImages = {},
+    tombstoneImage = nil,
     score = 0,
     timeLeft = 10.0,
     timeTotal = 10.0,
-    started = false
+    started = false,
+    over = false
 }
 
 function TimbermouseGame:new(playerName)
@@ -47,27 +49,49 @@ function TimbermouseGame:updateScoreCounter()
     ui.updateTextArea(enum.textArea.SCORE, string.format('<p align="center"><font size="32" color="#FFFFFF" face="serif"><b>%d</b></font></p>', self.score), self.playerName)
 end
 
-function TimbermouseGame:endGame()
+function TimbermouseGame:playerDeath(left)
     if playerData[self.playerName]:onScore(self.score) then
         tfm.exec.playSound('transformice/son/victoire.mp3', nil, nil, nil, self.playerName)
     else
         tfm.exec.playSound('tfmadv/disparition.mp3', nil, nil, nil, self.playerName)
     end
+    tfm.exec.stopMusic('musique', self.playerName)
+    tfm.exec.killPlayer(self.playerName)
 
+    addStartGameButton(self.playerName)
+    self:showGameover()
+    self.over = true
+
+    if left ~= nil then
+        if left then
+            self.tombstoneImage = tfm.exec.addImage(IMAGE_TOMBSTONE, '?420', 350, 400 - GROUND_OFFSET - 2, self.playerName, 0.075, 0.075, 0, 1.0, 0.5, 0.95)
+        else
+            self.tombstoneImage = tfm.exec.addImage(IMAGE_TOMBSTONE, '?420', 450, 400 - GROUND_OFFSET - 2, self.playerName, 0.075, 0.075, 0, 1.0, 0.5, 0.95)
+        end
+    else
+        self:removeTimeBar()
+    end
+    doLater(function()
+        if playerData[self.playerName].game == self then
+            self:endGame()
+            ui.removeTextArea(enum.textArea.GAME_OVER, playerName)
+            ui.removeTextArea(enum.textArea.GAME_OVER_CLOSE, playerName)
+        end
+    end, 10)
+end
+
+function TimbermouseGame:endGame()
     self.treeBlocks = {}
     for i, imageID in ipairs(self.treeImages) do
         tfm.exec.removeImage(imageID)
     end
-
+    tfm.exec.removeImage(self.tombstoneImage)
     tfm.exec.freezePlayer(self.playerName, false)
-    tfm.exec.stopMusic('musique', self.playerName)
     ui.removeTextArea(enum.textArea.SCORE, self.playerName)
     self:removeTimeBar()
-    self:showGameover()
     unhidePlayer(self.playerName)
-    addStartGameButton(self.playerName)
-
     playerData[self.playerName].game = nil
+    tfm.exec.respawnPlayer(self.playerName)
 end
 
 function TimbermouseGame:showGameover()
@@ -95,21 +119,24 @@ function TimbermouseGame:renderTree()
 end
 
 function TimbermouseGame:cutTreeBlock(left)
+    if self.over then
+        return
+    end
     if not self.started then
         self:start()
         self.started = true
     end
 
-    if  left and self.treeBlocks[2] == enum.treeBlocks.TREE_LEFT or
-        not left and self.treeBlocks[2] == enum.treeBlocks.TREE_RIGHT then
-        
-        self:endGame()
-        return
-    end
-
     table.remove(self.treeBlocks, 1)
     self.treeBlocks[#self.treeBlocks + 1] = self:generateTreeBlock()
     self:renderTree()
+
+    if  left and self.treeBlocks[1] == enum.treeBlocks.TREE_LEFT or
+        not left and self.treeBlocks[1] == enum.treeBlocks.TREE_RIGHT then
+        
+        self:playerDeath(left)
+        return
+    end
 
     if left then
         tfm.exec.movePlayer(self.playerName, 350, 400 - GROUND_OFFSET - 2, false, 0, 0, false)

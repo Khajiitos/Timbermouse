@@ -1,10 +1,9 @@
 scheduledFunctionCalls = {}
 
-function doLater(callback, ticksLater, forgetAfterNewRound)
+function doLater(callback, ticksLater)
     scheduledFunctionCalls[#scheduledFunctionCalls + 1] = {
         func = callback,
-        tick = eventLoopTicks + ticksLater,
-        forgetAfterNewRound = forgetAfterNewRound
+        tick = eventLoopTicks + ticksLater
     }
 end
 
@@ -66,6 +65,4 @@ function unhidePlayer(playerName)
         tfm.exec.removeImage(imageID)
     end
     playerData[playerName].imagesFromHide = {}
-    tfm.exec.killPlayer(playerName)
-    tfm.exec.respawnPlayer(playerName)
 end
