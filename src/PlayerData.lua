@@ -3,7 +3,8 @@ PlayerData = {
     game = nil,
     bestScore = 0,
     hidden = false,
-    imagesFromHide = {}
+    imagesFromHide = {},
+    openHelpTab = enum.helpTab.CLOSED
 }
 
 function PlayerData:new(playerName)

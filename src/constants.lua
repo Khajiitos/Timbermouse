@@ -20,6 +20,13 @@ enum = {
         TIME_LEFT = 4,
         TIME_TOTAL = 5,
         GAME_OVER = 6,
-        GAME_OVER_CLOSE = 7
+        GAME_OVER_CLOSE = 7,
+        HELP_CONTENT = 8,
+        HELP_CLOSE = 9,
+        HELP_TAB_DESCRIPTION = 10,
+    },
+    helpTab = {
+        CLOSED = 0,
+        DESCRIPTION = 1
     }
 }
