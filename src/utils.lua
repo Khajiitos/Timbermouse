@@ -15,6 +15,15 @@ function removeStartGameButton(playerName)
     ui.removeTextArea(enum.textArea.START_GAME, playerName)
 end
 
+function addWoodCoinsCounter(playerName)
+    ui.addTextArea(enum.textArea.WOOD_COINS, '<textformat indent="40"><p align="center">...</p></textformat>', playerName, 15, 35, 90, 25, 0x101010, 0x000000, 0.9, true)
+    tfm.exec.addImage(images.wood_coin.name, '&69', 20, 37, playerName, 0.33, 0.33, 0.0, 1.0, 0.0, 0.0)
+end
+
+function updateWoodCoinsCounter(playerName)
+    ui.updateTextArea(enum.textArea.WOOD_COINS, string.format('<textformat indent="40"><p align="center"><font color="#FFFFFF" size="16">%d</font></p></textformat>', playerData[playerName].woodCoins), playerName)
+end
+
 helpContent = {
     description =
 [[

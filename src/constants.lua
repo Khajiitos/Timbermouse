@@ -21,6 +21,8 @@ enum = {
         HELP_CONTENT = 8,
         HELP_CLOSE = 9,
         HELP_TAB_DESCRIPTION = 10,
+        WOOD_COINS = 11,
+        SHOP_BUTTON = 12
     },
     helpTab = {
         CLOSED = 0,

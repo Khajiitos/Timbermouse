@@ -100,11 +100,21 @@ function TimbermouseGame:playerDeath(left)
     else
         self:removeTimeBar()
     end
+
+    local coins = math.floor(self.score / 10)
+    if coins ~= 0 then
+        playerData[self.playerName].woodCoins = playerData[self.playerName].woodCoins + coins
+        updateWoodCoinsCounter(self.playerName)
+    end
+
     doLater(function()
         if playerData[self.playerName].game == self then
-            self:endGame()
+            if self.gameOverCoinsImage then
+                tfm.exec.removeImage(self.gameOverCoinsImage)
+            end
             ui.removeTextArea(enum.textArea.GAME_OVER, playerName)
             ui.removeTextArea(enum.textArea.GAME_OVER_CLOSE, playerName)
+            self:endGame()
         end
     end, 10)
 end
@@ -132,11 +142,17 @@ function TimbermouseGame:endGame()
 end
 
 function TimbermouseGame:showGameover()
+    local coins = math.floor(self.score / 10)
     local text = '<p align="center"><font color="#fcf1d2" size="24" face="serif"><b>GAME OVER</b></font></p>'
     text = text .. string.format('<p align="center"><font size="20" color="#825727">SCORE</font><br><font size="24" color="#FFFFFF"><b>%d</b></font></p>', self.score)
     text = text .. string.format('<p align="center"><font size="18" color="#825727">BEST</font><br><font size="22" color="#FFFFFF"><b>%d</b></font></p>', playerData[self.playerName].bestScore)
-
-    ui.addTextArea(enum.textArea.GAME_OVER, text, self.playerName, 275, 150, 250, 150, 0xf0bb69, 0x825727, 1.0, true)
+    local height, startY = 150, 150
+    if coins ~= 0 then
+        text = text .. string.format('<br><textformat indent="30"><p align="center"><font size="22" color="#825727">+ %d</font></p></textformat>', coins)
+        height, startY = 200, 125
+        self.gameOverCoinsImage = tfm.exec.addImage(images.wood_coin.name, '&69', 350, 280, playerName, 0.33, 0.33, 0.0, 1.0, 0.0, 0.0)
+    end
+    ui.addTextArea(enum.textArea.GAME_OVER, text, self.playerName, 275, startY, 250, height, 0xf0bb69, 0x825727, 1.0, true)
     ui.addTextArea(enum.textArea.GAME_OVER_CLOSE, '<a href="event:gameOverClose"><font size="11" color="#FCF1D2"><p align="center"><b>X</b></p></font></a>', self.playerName, 500, 160, 15, 15, 0x825727, 0x724717, 1.0, true)
 end
 

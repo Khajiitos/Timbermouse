@@ -16,5 +16,8 @@ function eventNewPlayer(playerName)
         end
     end
 
+    addWoodCoinsCounter(playerName)
+    updateWoodCoinsCounter(playerName)
     addStartGameButton(playerName)
+    ui.addTextArea(enum.textArea.SHOP_BUTTON, "<a href='event:shop'><p align='center'><font size='16' color='#FFFFFF'>Shop</font></p></a>", playerName, 115, 35, 75, 25, 0x111111, 0x111111, 0.9, true)
 end

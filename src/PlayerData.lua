@@ -4,7 +4,8 @@ PlayerData = {
     bestScore = 0,
     hidden = false,
     imagesFromHide = {},
-    openHelpTab = enum.helpTab.CLOSED
+    openHelpTab = enum.helpTab.CLOSED,
+    woodCoins = 0
 }
 
 function PlayerData:new(playerName)

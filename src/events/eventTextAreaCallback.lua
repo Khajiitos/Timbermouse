@@ -1,4 +1,5 @@
 function eventTextAreaCallback(textAreaID, playerName, callback)
+    local game = game(playerName)
     if callback == 'helpQuestionMark' then
         if playerData[playerName].openHelpTab == enum.helpTab.CLOSED then
             changeHelpTab(playerName, enum.helpTab.DESCRIPTION)
@@ -6,13 +7,16 @@ function eventTextAreaCallback(textAreaID, playerName, callback)
             changeHelpTab(playerName, enum.helpTab.CLOSED)
         end
     elseif callback == 'startGame' then
-        if game(playerName) then
-            game(playerName):endGame()
+        if game then
+            game:endGame()
         end
         startTimbermouseGame(playerName)
     elseif callback == 'gameOverClose' then
-        if game(playerName) then
-            game(playerName):endGame()
+        if game then
+            if game.gameOverCoinsImage then
+                tfm.exec.removeImage(game.gameOverCoinsImage)
+            end
+            game:endGame()
         end
         ui.removeTextArea(enum.textArea.GAME_OVER, playerName)
         ui.removeTextArea(enum.textArea.GAME_OVER_CLOSE, playerName)
