@@ -13,6 +13,7 @@ files = {
     'events/eventKeyboard.lua',
     'events/eventMouse.lua',
     'events/eventNewPlayer.lua',
+    'events/eventNewGame.lua',
     'events/eventPlayerLeft.lua',
     'events/eventPlayerDied.lua',
     'events/eventPlayerRespawn.lua',

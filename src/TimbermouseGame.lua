@@ -1,13 +1,16 @@
 TimbermouseGame = {
     playerName = nil,
     treeBlocks = {},
-    treeImages = {},
+    staticTreeImages = {}, -- root, wood
+    dynamicTreeImages = {}, -- branches
     tombstoneImage = nil,
+    axeImage = nil,
     score = 0,
     timeLeft = 10.0,
     timeTotal = 10.0,
     started = false,
-    over = false
+    over = false,
+    treeType = 'default'
 }
 
 function TimbermouseGame:new(playerName)
@@ -15,17 +18,43 @@ function TimbermouseGame:new(playerName)
     setmetatable(o, self)
     self.__index = self
     o.playerName = playerName
+    o.treeType = treeTypes[math.random(#treeTypes)]
     o.treeBlocks = {}
-    o.treeImages = {}
+    o.staticTreeImages = {}
+    o.dynamicTreeImages = {}
 
     o.treeBlocks[1] = enum.treeBlocks.TREE
     o.treeBlocks[2] = enum.treeBlocks.TREE
     for i = 3, 8 do
         o.treeBlocks[i] = o:generateTreeBlock()
     end
-
+    
+    ui.addTextArea(enum.textArea.SCORE, '', o.playerName, 300, 70, 200, 50, nil, nil, 0, true)
+    ui.addTextArea(enum.textArea.TIME_TOTAL, '', self.playerName, 300, 25, 200, 25, nil, nil, 1.0, true)
+    ui.removeTextArea(enum.textArea.GAME_OVER, o.playerName)
+    ui.removeTextArea(enum.textArea.GAME_OVER_CLOSE, o.playerName)
+    
+    o:initStaticTreeImages()
+    o:updateTree()
     o:updateTimeBar()
+    o:updateScoreCounter()
+
+    tfm.exec.freezePlayer(o.playerName, true, false)
+    tfm.exec.movePlayer(o.playerName, 350, 400 - GROUND_OFFSET - 15, false, 0, 0, false)
+    o.axeImage = tfm.exec.addImage(images.axe_right.name, '$'..o.playerName, 20, 0, o.playerName, 0.33, 0.33, 0.0, 1.0, 0.5, 0.5)
+    tfm.exec.stopMusic('musique', o.playerName)
+
+    removeStartGameButton(o.playerName)
+    hideMouseForOthers(o.playerName)
     return o
+end
+
+function TimbermouseGame:initStaticTreeImages()
+    local images = trees[self.treeType].images
+    self.staticTreeImages[#self.staticTreeImages + 1] = tfm.exec.addImage(images.root.name, '?69', 400, 400 - GROUND_OFFSET, self.playerName, 0.5, 0.5, 0, 1.0, 0.5, 1)
+    for i, _ in ipairs(self.treeBlocks) do
+        self.staticTreeImages[#self.staticTreeImages + 1] = tfm.exec.addImage(images.wood.name, '?69', 400, 400 - (i * 50) - GROUND_OFFSET - (images.root.height * 0.5), self.playerName, 0.5, 0.5, 0, 1.0, 0.5, 0)
+    end
 end
 
 function TimbermouseGame:generateTreeBlock()
@@ -46,7 +75,7 @@ function TimbermouseGame:generateTreeBlock()
 end
 
 function TimbermouseGame:updateScoreCounter()
-    ui.updateTextArea(enum.textArea.SCORE, string.format('<p align="center"><font size="32" color="#FFFFFF" face="serif"><b>%d</b></font></p>', self.score), self.playerName)
+    ui.updateTextArea(enum.textArea.SCORE, string.format('<p align="center"><font size="32" color="%s" face="serif"><b>%d</b></font></p>', trees[self.treeType].scoreTextColor, self.score), self.playerName)
 end
 
 function TimbermouseGame:playerDeath(left)
@@ -64,9 +93,9 @@ function TimbermouseGame:playerDeath(left)
 
     if left ~= nil then
         if left then
-            self.tombstoneImage = tfm.exec.addImage(IMAGE_TOMBSTONE, '?420', 350, 400 - GROUND_OFFSET - 2, self.playerName, 0.075, 0.075, 0, 1.0, 0.5, 0.95)
+            self.tombstoneImage = tfm.exec.addImage(images.tombstone.name, '?420', 350, 400 - GROUND_OFFSET - 2, self.playerName, 0.075, 0.075, 0, 1.0, 0.5, 0.95)
         else
-            self.tombstoneImage = tfm.exec.addImage(IMAGE_TOMBSTONE, '?420', 450, 400 - GROUND_OFFSET - 2, self.playerName, 0.075, 0.075, 0, 1.0, 0.5, 0.95)
+            self.tombstoneImage = tfm.exec.addImage(images.tombstone.name, '?420', 450, 400 - GROUND_OFFSET - 2, self.playerName, 0.075, 0.075, 0, 1.0, 0.5, 0.95)
         end
     else
         self:removeTimeBar()
@@ -82,16 +111,24 @@ end
 
 function TimbermouseGame:endGame()
     self.treeBlocks = {}
-    for i, imageID in ipairs(self.treeImages) do
+    for i, imageID in ipairs(self.dynamicTreeImages) do
         tfm.exec.removeImage(imageID)
     end
-    tfm.exec.removeImage(self.tombstoneImage)
-    tfm.exec.freezePlayer(self.playerName, false)
-    ui.removeTextArea(enum.textArea.SCORE, self.playerName)
+    for i, imageID in ipairs(self.staticTreeImages) do
+        tfm.exec.removeImage(imageID)
+    end
     self:removeTimeBar()
     unhidePlayer(self.playerName)
-    playerData[self.playerName].game = nil
+
+    if self.tombstoneImage then
+        tfm.exec.removeImage(self.tombstoneImage)
+    end
+
+    tfm.exec.freezePlayer(self.playerName, false)
     tfm.exec.respawnPlayer(self.playerName)
+    
+    ui.removeTextArea(enum.textArea.SCORE, self.playerName)
+    playerData[self.playerName].game = nil
 end
 
 function TimbermouseGame:showGameover()
@@ -103,17 +140,18 @@ function TimbermouseGame:showGameover()
     ui.addTextArea(enum.textArea.GAME_OVER_CLOSE, '<a href="event:gameOverClose"><font size="11" color="#FCF1D2"><p align="center"><b>X</b></p></font></a>', self.playerName, 500, 160, 15, 15, 0x825727, 0x724717, 1.0, true)
 end
 
-function TimbermouseGame:renderTree()
-    for i, imageID in ipairs(self.treeImages) do
+function TimbermouseGame:updateTree()
+    for i, imageID in ipairs(self.dynamicTreeImages) do
         tfm.exec.removeImage(imageID)
     end
-    self.treeImages = {}
+    self.dynamicTreeImages = {}
+
+    local images = trees[self.treeType].images
     for i, treeBlock in ipairs(self.treeBlocks) do
-        self.treeImages[#self.treeImages + 1] = tfm.exec.addImage(IMAGE_WOOD, '?69', 400, 400 - (i * 50) - GROUND_OFFSET, self.playerName, 0.5, 0.5, 0, 1.0, 0.5, 0)
         if treeBlock == enum.treeBlocks.TREE_LEFT then
-            self.treeImages[#self.treeImages + 1] = tfm.exec.addImage(IMAGE_LEFT_BRANCH, '?69', 350, 400 - (i * 50) - GROUND_OFFSET, self.playerName, 0.5, 0.5, 0, 1.0, 0.5, 0)
+            self.dynamicTreeImages[#self.dynamicTreeImages + 1] = tfm.exec.addImage(images.branch_left.name, '?68', 350, 400 - (i * 50) - GROUND_OFFSET - (images.root.height * 0.5), self.playerName, 0.5, 0.5, 0, 1.0, 0.66, 0.0)
         elseif treeBlock == enum.treeBlocks.TREE_RIGHT then
-            self.treeImages[#self.treeImages + 1] = tfm.exec.addImage(IMAGE_RIGHT_BRANCH, '?69', 450, 400 - (i * 50) - GROUND_OFFSET, self.playerName, 0.5, 0.5, 0, 1.0, 0.5, 0)
+            self.dynamicTreeImages[#self.dynamicTreeImages + 1] = tfm.exec.addImage(images.branch_right.name, '?68', 450, 400 - (i * 50) - GROUND_OFFSET - (images.root.height * 0.5), self.playerName, 0.5, 0.5, 0, 1.0, 0.33, 0.0)
         end
     end
 end
@@ -129,7 +167,7 @@ function TimbermouseGame:cutTreeBlock(left)
 
     table.remove(self.treeBlocks, 1)
     self.treeBlocks[#self.treeBlocks + 1] = self:generateTreeBlock()
-    self:renderTree()
+    self:updateTree()
 
     if  left and self.treeBlocks[1] == enum.treeBlocks.TREE_LEFT or
         not left and self.treeBlocks[1] == enum.treeBlocks.TREE_RIGHT then
@@ -138,12 +176,15 @@ function TimbermouseGame:cutTreeBlock(left)
         return
     end
 
+    tfm.exec.removeImage(self.axeImage)
     if left then
-        tfm.exec.movePlayer(self.playerName, 350, 400 - GROUND_OFFSET - 2, false, 0, 0, false)
+        tfm.exec.movePlayer(self.playerName, 350, 400 - GROUND_OFFSET - 15, false, 0, 0, false)
         tfm.exec.displayParticle(tfm.enum.particle.ghostSpirit, 375, 400 - GROUND_OFFSET - 25, 5, 1, 0.25, 0.1, self.playerName)
+        self.axeImage = tfm.exec.addImage(images.axe_right.name, '$'..self.playerName, 20, 0, self.playerName, 0.33, 0.33, 0.0, 1.0, 0.5, 0.5)
     else
-        tfm.exec.movePlayer(self.playerName, 450, 400 - GROUND_OFFSET - 2, false, 0, 0, false)
+        tfm.exec.movePlayer(self.playerName, 450, 400 - GROUND_OFFSET - 15, false, 0, 0, false)
         tfm.exec.displayParticle(tfm.enum.particle.ghostSpirit, 425, 400 - GROUND_OFFSET - 25, -5, 1, -0.25, 0.1, self.playerName)
+        self.axeImage = tfm.exec.addImage(images.axe_left.name, '$'..self.playerName, -20, 0, self.playerName, 0.33, 0.33, 0.0, 1.0, 0.5, 0.5)
     end
 
     self.score = self.score + 1
@@ -166,7 +207,7 @@ function TimbermouseGame:removeTimeBar()
 end
 
 function TimbermouseGame:updateTimeBar()
-    self:removeTimeBar()
+    ui.removeTextArea(enum.textArea.TIME_LEFT, self.playerName)
 
     local timeLeftR = 255 - (255 * (self.timeLeft / self.timeTotal))
     local timeLeftG = 255 - timeLeftR
@@ -174,7 +215,6 @@ function TimbermouseGame:updateTimeBar()
 
     local timeLeftWidth = 200 * (self.timeLeft / self.timeTotal)
 
-    ui.addTextArea(enum.textArea.TIME_TOTAL, '', self.playerName, 300, 25, 200, 25, nil, nil, 1.0, true)
     ui.addTextArea(enum.textArea.TIME_LEFT, '', self.playerName, 300, 25, timeLeftWidth, 25, color, color, 1.0, true)
 end
 
@@ -197,14 +237,4 @@ end
 function startTimbermouseGame(playerName)
     local game = TimbermouseGame:new(playerName)
     playerData[playerName].game = game
-    tfm.exec.freezePlayer(playerName, true, false)
-    game:renderTree(playerName)
-    removeStartGameButton(playerName)
-    ui.addTextArea(enum.textArea.SCORE, '', playerName, 300, 70, 200, 50, nil, nil, 0, true)
-    game:updateScoreCounter()
-    tfm.exec.stopMusic('musique', playerName)
-    hideMouseForOthers(playerName)
-    ui.removeTextArea(enum.textArea.GAME_OVER, playerName)
-    ui.removeTextArea(enum.textArea.GAME_OVER_CLOSE, playerName)
-    tfm.exec.movePlayer(playerName, 350, 400 - GROUND_OFFSET - 2, false, 0, 0, false)
 end

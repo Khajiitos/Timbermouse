@@ -79,7 +79,7 @@ function hideMouseForOthers(playerName)
 end
 
 function hideMouseFor(playerName, hideFor)
-    local id = tfm.exec.addImage(IMAGE_WOOD, '%'..playerName, 0, 0, hideFor, 0, 0, 0, 0, 0, 0)
+    local id = tfm.exec.addImage(images.tombstone.name, '%'..playerName, 0, 0, hideFor, 0, 0, 0, 0, 0, 0)
     local images = playerData[playerName].imagesFromHide
     images[#images + 1] = id
 end
