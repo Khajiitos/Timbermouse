@@ -8,6 +8,7 @@ files = {
     'utils.lua',
     'PlayerData.lua',
     'TimbermouseGame.lua',
+    'shop.lua',
 
     'events/eventChatCommand.lua',
     'events/eventKeyboard.lua',

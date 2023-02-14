@@ -22,7 +22,18 @@ enum = {
         HELP_CLOSE = 9,
         HELP_TAB_DESCRIPTION = 10,
         WOOD_COINS = 11,
-        SHOP_BUTTON = 12
+
+        SHOP_BUTTON = 12,
+        SHOP_BACKGROUND = 13,
+        SHOP_BUTTON_BACK = 14,
+        SHOP_BUTTON_FORWARD = 15,
+        SHOP_BUTTON_CLOSE = 16,
+
+        -- there's gonna be 5 each of those
+        SHOP_AXE_NAME = 17,
+        SHOP_AXE_IMAGE_FRAME = 22,
+        SHOP_AXE_DESCRIPTION = 27,
+        SHOP_AXE_BUTTON = 32,
     },
     helpTab = {
         CLOSED = 0,
@@ -86,21 +97,101 @@ images = {
         width = 200,
         height = 157,
     },
-    axe_left = {
+    default_axe_left = {
         name = '186464c864e.png',
         width = 108,
         height = 94,
     },
-    axe_right = {
+    default_axe_right = {
         name = '186464c393a.png',
         width = 108,
         height = 94,
     },
+    --[[
+    golden_axe_left = {
+        name = 'pending.png',
+        width = 108,
+        height = 94,
+    },
+    golden_axe_right = {
+        name = 'pending.png',
+        width = 108,
+        height = 94,
+    },
+    diamond_axe_left = {
+        name = 'pending.png',
+        width = 108,
+        height = 94,
+    },
+    diamond_axe_right = {
+        name = 'pending.png',
+        width = 108,
+        height = 94,
+    },
+    sword_left = {
+        name = 'pending.png',
+        width = 146,
+        height = 16,
+    },
+    sword_right = {
+        name = 'pending.png',
+        width = 146,
+        height = 16,
+    },
+    chainsaw_left = {
+        name = 'pending.png',
+        width = 96,
+        height = 52,
+    },
+    chainsaw_right = {
+        name = 'pending.png',
+        width = 96,
+        height = 52,
+    },]]
     wood_coin = {
         name = '186464cd336.png',
         width = 120,
         height = 69,
     }
+}
+
+axes = {
+    {
+        name = "Default",
+        description = "The default axe",
+        price = 0,
+        image_left = images.default_axe_left,
+        image_right = images.default_axe_right
+    },
+    --[[
+    {
+        name = "<font color='#FFD700'>Golden axe</font>",
+        description = "A golden axe",
+        price = 50,
+        image_left = images.golden_axe_left,
+        image_right = images.golden_axe_right
+    },
+    {
+        name = "<font color='#B9F2FF'>Diamond axe</font>",
+        description = "A diamond axe",
+        price = 100,
+        image_left = images.diamond_axe_left,
+        image_right = images.diamond_axe_right
+    },
+    {
+        name = "<font color='#AAA9AD'>Sword</font>",
+        description = "Because axes are overrated",
+        price = 250,
+        image_left = images.sword_left,
+        image_right = images.sword_right
+    },
+    {
+        name = "<font color='#CC6600'>Chainsaw</font>",
+        description = "Free infinite gasoline included",
+        price = 500,
+        image_left = images.chainsaw_left,
+        image_right = images.chainsaw_right
+    }]]
 }
 
 trees = {

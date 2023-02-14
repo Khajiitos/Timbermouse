@@ -41,7 +41,7 @@ function TimbermouseGame:new(playerName)
 
     tfm.exec.freezePlayer(o.playerName, true, false)
     tfm.exec.movePlayer(o.playerName, 350, 400 - GROUND_OFFSET - 15, false, 0, 0, false)
-    o.axeImage = tfm.exec.addImage(images.axe_right.name, '$'..o.playerName, 20, 0, o.playerName, 0.33, 0.33, 0.0, 1.0, 0.5, 0.5)
+    o.axeImage = tfm.exec.addImage(axe(o.playerName).image_right.name, '$'..o.playerName, 20, 0, o.playerName, 0.425, 0.425, 0.0, 1.0, 0.5, 0.5)
     tfm.exec.stopMusic('musique', o.playerName)
 
     removeStartGameButton(o.playerName)
@@ -148,9 +148,9 @@ function TimbermouseGame:showGameover()
     text = text .. string.format('<p align="center"><font size="18" color="#825727">BEST</font><br><font size="22" color="#FFFFFF"><b>%d</b></font></p>', playerData[self.playerName].bestScore)
     local height, startY = 150, 150
     if coins ~= 0 then
-        text = text .. string.format('<br><textformat indent="30"><p align="center"><font size="22" color="#825727">+ %d</font></p></textformat>', coins)
+        text = text .. string.format('<br><textformat indent="120"><font size="22" color="#825727">+ %d</font></textformat>', coins)
         height, startY = 200, 125
-        self.gameOverCoinsImage = tfm.exec.addImage(images.wood_coin.name, '&69', 350, 280, playerName, 0.33, 0.33, 0.0, 1.0, 0.0, 0.0)
+        self.gameOverCoinsImage = tfm.exec.addImage(images.wood_coin.name, '&69', 350, 280, self.playerName, 0.33, 0.33, 0.0, 1.0, 0.0, 0.0)
     end
     ui.addTextArea(enum.textArea.GAME_OVER, text, self.playerName, 275, startY, 250, height, 0xf0bb69, 0x825727, 1.0, true)
     ui.addTextArea(enum.textArea.GAME_OVER_CLOSE, '<a href="event:gameOverClose"><font size="11" color="#FCF1D2"><p align="center"><b>X</b></p></font></a>', self.playerName, 500, 160, 15, 15, 0x825727, 0x724717, 1.0, true)
@@ -196,11 +196,11 @@ function TimbermouseGame:cutTreeBlock(left)
     if left then
         tfm.exec.movePlayer(self.playerName, 350, 400 - GROUND_OFFSET - 15, false, 0, 0, false)
         tfm.exec.displayParticle(tfm.enum.particle.ghostSpirit, 375, 400 - GROUND_OFFSET - 25, 5, 1, 0.25, 0.1, self.playerName)
-        self.axeImage = tfm.exec.addImage(images.axe_right.name, '$'..self.playerName, 20, 0, self.playerName, 0.33, 0.33, 0.0, 1.0, 0.5, 0.5)
+        self.axeImage = tfm.exec.addImage(axe(self.playerName).image_right.name, '$'..self.playerName, 20, 0, self.playerName, 0.425, 0.425, 0.0, 1.0, 0.5, 0.5)
     else
         tfm.exec.movePlayer(self.playerName, 450, 400 - GROUND_OFFSET - 15, false, 0, 0, false)
         tfm.exec.displayParticle(tfm.enum.particle.ghostSpirit, 425, 400 - GROUND_OFFSET - 25, -5, 1, -0.25, 0.1, self.playerName)
-        self.axeImage = tfm.exec.addImage(images.axe_left.name, '$'..self.playerName, -20, 0, self.playerName, 0.33, 0.33, 0.0, 1.0, 0.5, 0.5)
+        self.axeImage = tfm.exec.addImage(axe(self.playerName).image_left.name, '$'..self.playerName, -20, 0, self.playerName, 0.425, 0.425, 0.0, 1.0, 0.5, 0.5)
     end
 
     self.score = self.score + 1

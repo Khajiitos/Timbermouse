@@ -5,7 +5,10 @@ PlayerData = {
     hidden = false,
     imagesFromHide = {},
     openHelpTab = enum.helpTab.CLOSED,
-    woodCoins = 0
+    woodCoins = 6969420,
+    shopInterfaceStatus = nil,
+    equippedAxeID = 1,
+    ownedAxes = {}
 }
 
 function PlayerData:new(playerName)
@@ -14,6 +17,8 @@ function PlayerData:new(playerName)
     self.__index = self
     o.playerName = playerName
     o.imagesFromHide = {}
+    o.shopInterfaceStatus = ShopInterfaceStatus:new(playerName)
+    o.ownedAxes = {1}
     return o
 end
 

@@ -1,4 +1,7 @@
 function eventTextAreaCallback(textAreaID, playerName, callback)
+    if playerData[playerName].shopInterfaceStatus:onTextAreaCallback(callback) then
+        return
+    end
     local game = game(playerName)
     if callback == 'helpQuestionMark' then
         if playerData[playerName].openHelpTab == enum.helpTab.CLOSED then

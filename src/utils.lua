@@ -1,3 +1,12 @@
+function table.has(tbl, item)
+    for _, itemInTable in pairs(tbl) do
+        if itemInTable == item then
+            return true
+        end
+    end
+    return false
+end
+
 scheduledFunctionCalls = {}
 
 function doLater(callback, ticksLater)
@@ -69,6 +78,13 @@ function removeHelpPage(playerName)
     ui.removeTextArea(enum.textArea.HELP_CONTENT, playerName)
     ui.removeTextArea(enum.textArea.HELP_CLOSE, playerName)
     ui.removeTextArea(enum.textArea.HELP_TAB_DESCRIPTION, playerName)
+end
+
+function axe(playerName)
+    if playerData[playerName] then
+        return axes[playerData[playerName].equippedAxeID]
+    end
+    return nil
 end
 
 function game(playerName)
