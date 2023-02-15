@@ -21,14 +21,14 @@ function ShopInterfaceStatus:onTextAreaCallback(callback)
     elseif callback == "shopForward" then
         if self.offset + 5 < #axes then
             self.offset = self.offset + 1
-            self:close()
-            self:open()
+            self:close(true)
+            self:open(true)
         end
     elseif callback == "shopBack" then
         if self.offset > 0 then
             self.offset = self.offset - 1
-            self:close()
-            self:open()
+            self:close(true)
+            self:open(true)
         end
     else
         for axeID in callback:gmatch('buyAxe(%d)') do
@@ -37,8 +37,8 @@ function ShopInterfaceStatus:onTextAreaCallback(callback)
                 playerData[self.playerName].woodCoins = playerData[self.playerName].woodCoins - axes[axeID].price
                 playerData[self.playerName].ownedAxes[#playerData[self.playerName].ownedAxes + 1] = axeID
                 updateWoodCoinsCounter(self.playerName)
-                self:close()
-                self:open()
+                self:close(true)
+                self:open(true)
             end
             return true
         end
@@ -47,8 +47,8 @@ function ShopInterfaceStatus:onTextAreaCallback(callback)
             if table.has(playerData[self.playerName].ownedAxes, axeID) then
                 playerData[self.playerName].equippedAxeID = axeID
                 updateWoodCoinsCounter(self.playerName)
-                self:close()
-                self:open()
+                self:close(true)
+                self:open(true)
             end
             return true
         end
@@ -57,8 +57,11 @@ function ShopInterfaceStatus:onTextAreaCallback(callback)
     return true
 end
 
-function ShopInterfaceStatus:open()
-    ui.addTextArea(enum.textArea.SHOP_BACKGROUND, '', self.playerName, 100, 120, 600, 200, 0x101010, 0x000000, 1.0, true)
+function ShopInterfaceStatus:open(justUpdating)
+    if not justUpdating then
+        ui.addTextArea(enum.textArea.SHOP_BACKGROUND, '', self.playerName, 100, 120, 600, 200, 0x101010, 0x000000, 1.0, true)
+        ui.addTextArea(enum.textArea.SHOP_BUTTON_CLOSE, '<p align="center"><a href="event:shop"><font size="16" color="#FFFFFF">Close</font></a></p>', self.playerName, 325, 330, 150, 25, 0x0F0F0F, 0x000000, 1.0, true)
+    end
 
     if self.offset > 0 then
         ui.addTextArea(enum.textArea.SHOP_BUTTON_BACK, '<a href="event:shopBack"><p align="center"><font size="18" color="#FFFFFF"><b>&lt;</b></font></p></a>', self.playerName, 110, 280, 25, 25, 0x101010, 0x000000, 1.0, true)
@@ -101,9 +104,11 @@ function ShopInterfaceStatus:open()
     self.opened = true
 end
 
-function ShopInterfaceStatus:close()
-    ui.removeTextArea(enum.textArea.SHOP_BACKGROUND, self.playerName)
-    ui.removeTextArea(enum.textArea.SHOP_BUTTON_CLOSE, self.playerName)
+function ShopInterfaceStatus:close(justUpdating)
+    if not justUpdating then
+        ui.removeTextArea(enum.textArea.SHOP_BACKGROUND, self.playerName)
+        ui.removeTextArea(enum.textArea.SHOP_BUTTON_CLOSE, self.playerName)
+    end
     ui.removeTextArea(enum.textArea.SHOP_BUTTON_BACK, self.playerName)
     ui.removeTextArea(enum.textArea.SHOP_BUTTON_FORWARD, self.playerName)
     for i = 0, 4 do
