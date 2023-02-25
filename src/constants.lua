@@ -107,47 +107,46 @@ images = {
         width = 108,
         height = 94,
     },
-    --[[
     golden_axe_left = {
-        name = 'pending.png',
+        name = '186865bcff5.png',
         width = 108,
         height = 94,
     },
     golden_axe_right = {
-        name = 'pending.png',
+        name = '186865c1d25.png',
         width = 108,
         height = 94,
     },
     diamond_axe_left = {
-        name = 'pending.png',
+        name = '186865c6a7e.png',
         width = 108,
         height = 94,
     },
     diamond_axe_right = {
-        name = 'pending.png',
+        name = '186865cb73f.png',
         width = 108,
         height = 94,
     },
     sword_left = {
-        name = 'pending.png',
+        name = '186865d5123.png',
         width = 146,
         height = 16,
     },
     sword_right = {
-        name = 'pending.png',
+        name = '186865d0433.png',
         width = 146,
         height = 16,
     },
     chainsaw_left = {
-        name = 'pending.png',
+        name = '186865d9e2c.png',
         width = 96,
         height = 52,
     },
     chainsaw_right = {
-        name = 'pending.png',
+        name = '186865deb25.png',
         width = 96,
         height = 52,
-    },]]
+    },
     wood_coin = {
         name = '186464cd336.png',
         width = 120,
@@ -163,7 +162,6 @@ axes = {
         image_left = images.default_axe_left,
         image_right = images.default_axe_right
     },
-    --[[
     {
         name = "<font color='#FFD700'>Golden axe</font>",
         description = "A golden axe",
@@ -191,7 +189,7 @@ axes = {
         price = 500,
         image_left = images.chainsaw_left,
         image_right = images.chainsaw_right
-    }]]
+    }
 }
 
 trees = {

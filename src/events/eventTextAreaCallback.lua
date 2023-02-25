@@ -11,6 +11,9 @@ function eventTextAreaCallback(textAreaID, playerName, callback)
         end
     elseif callback == 'startGame' then
         if game then
+            if game.gameOverCoinsImage then
+                tfm.exec.removeImage(game.gameOverCoinsImage)
+            end
             game:endGame()
         end
         startTimbermouseGame(playerName)
